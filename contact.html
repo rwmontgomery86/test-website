@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Us | NovaSight</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="site-bg"></div>
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a class="brand" href="index.html">NovaSight</a>
+        <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav">Menu</button>
+        <nav id="main-nav" class="main-nav">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a class="active" href="contact.html">Contact Us</a>
+        </nav>
+        <div class="nav-actions">
+          <button class="theme-toggle" type="button" aria-label="Switch to dark mode">Dark Mode</button>
+          <a class="btn btn-sm active-btn" href="contact.html">Get Demo</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="container page">
+      <section class="page-hero">
+        <span class="pill">Contact Us</span>
+        <h1>Talk to the NovaSight team.</h1>
+        <p>
+          Placeholder text: Tell us about your goals and we will follow up with a
+          tailored walkthrough.
+        </p>
+      </section>
+
+      <section class="contact-layout">
+        <form class="contact-form" action="#" method="post">
+          <label>
+            Full Name
+            <input type="text" name="name" placeholder="Placeholder Name" />
+          </label>
+          <label>
+            Work Email
+            <input type="email" name="email" placeholder="name@company.com" />
+          </label>
+          <label>
+            Company
+            <input type="text" name="company" placeholder="Placeholder Company" />
+          </label>
+          <label>
+            Message
+            <textarea name="message" rows="5" placeholder="Placeholder details about your request"></textarea>
+          </label>
+          <button class="btn form-btn" type="submit">Submit Request</button>
+        </form>
+
+        <aside class="contact-card">
+          <img src="https://placehold.co/540x320/png?text=Office+Placeholder" alt="Placeholder office image" />
+          <h2>Reach Us</h2>
+          <p>Placeholder Street, Suite 100<br />Placeholder City, ST 00000</p>
+          <p>Email: hello@placeholder-saas.com</p>
+          <p>Phone: +1 (000) 000-0000</p>
+        </aside>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-wrap">
+        <p>© 2026 NovaSight. Placeholder SaaS concept.</p>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+        </div>
+      </div>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>
