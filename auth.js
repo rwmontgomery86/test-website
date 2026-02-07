@@ -28,7 +28,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCL6vr_yk2q0fI8xj1Gk4N8HAra5JH86Ns",
+  apiKey: "AIzaSyDhkdluxj-Mnf1hUuQ83Z4JkaXaArNkRPw",
   authDomain: "test-website-members.firebaseapp.com",
   projectId: "test-website-members",
   storageBucket: "test-website-members.firebasestorage.app",
