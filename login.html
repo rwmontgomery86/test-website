@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | NovaSight</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="site-bg"></div>
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a class="brand" href="index.html">NovaSight</a>
+        <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav">Menu</button>
+        <nav id="main-nav" class="main-nav">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="products.html">Products</a>
+          <a href="contact.html">Contact Us</a>
+        </nav>
+        <div class="nav-actions">
+          <button class="theme-toggle" type="button" aria-label="Switch to dark mode">Dark Mode</button>
+          <a class="btn btn-sm active-btn" href="login.html">Login</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="container page">
+      <section class="page-hero">
+        <span class="pill">Member Access</span>
+        <h1>Login or create your member account.</h1>
+        <p>
+          First-time members can sign up with name, email, and password. A verification email is sent before profile access is enabled.
+        </p>
+      </section>
+
+      <section class="auth-layout">
+        <article class="auth-card">
+          <h2>Login</h2>
+          <p>For returning members with verified accounts.</p>
+          <form id="login-form" class="auth-form" novalidate>
+            <label>
+              Email
+              <input type="email" name="email" autocomplete="email" required />
+            </label>
+            <label>
+              Password
+              <input type="password" name="password" autocomplete="current-password" required />
+            </label>
+            <button class="btn" type="submit">Login</button>
+          </form>
+        </article>
+
+        <article class="auth-card">
+          <h2>Sign Up</h2>
+          <p>First time here? Create your account.</p>
+          <form id="signup-form" class="auth-form" novalidate>
+            <label>
+              Full Name
+              <input type="text" name="name" autocomplete="name" required />
+            </label>
+            <label>
+              Email
+              <input type="email" name="email" autocomplete="email" required />
+            </label>
+            <label>
+              Password
+              <input type="password" name="password" autocomplete="new-password" minlength="6" required />
+            </label>
+            <button class="btn" type="submit">Create Account</button>
+          </form>
+        </article>
+      </section>
+
+      <section class="profile-card">
+        <h2>Verification</h2>
+        <p>After signup, check your inbox and click the email verification link.</p>
+        <div class="auth-actions">
+          <button id="resend-verification" class="text-btn" type="button" hidden>Resend Verification Email</button>
+          <button id="check-verification" class="text-btn" type="button" hidden>I Verified My Email</button>
+        </div>
+        <div id="auth-status" class="status info" role="status" aria-live="polite">
+          Configure Firebase in <code>auth.js</code> before testing email-based auth.
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-wrap">
+        <p>© 2026 NovaSight. Placeholder SaaS concept.</p>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="products.html">Products</a>
+          <a href="contact.html">Contact</a>
+        </div>
+      </div>
+    </footer>
+    <script src="script.js"></script>
+    <script type="module" src="auth.js"></script>
+  </body>
+</html>

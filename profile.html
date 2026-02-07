@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile | NovaSight</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="site-bg"></div>
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a class="brand" href="index.html">NovaSight</a>
+        <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav">Menu</button>
+        <nav id="main-nav" class="main-nav">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="products.html">Products</a>
+          <a href="contact.html">Contact Us</a>
+        </nav>
+        <div class="nav-actions">
+          <button class="theme-toggle" type="button" aria-label="Switch to dark mode">Dark Mode</button>
+          <a class="btn btn-sm active-btn" href="profile.html">Profile</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="container page">
+      <section class="profile-card">
+        <h2>Member Profile</h2>
+        <h1 id="welcome-title">Welcome Member!</h1>
+        <p>This is your static profile page for testing member experiences.</p>
+        <div class="profile-actions">
+          <button id="sign-out" class="text-btn" type="button">Sign Out</button>
+        </div>
+        <div id="profile-status" class="status info" role="status" aria-live="polite">Checking account status...</div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-wrap">
+        <p>© 2026 NovaSight. Placeholder SaaS concept.</p>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="products.html">Products</a>
+          <a href="contact.html">Contact</a>
+        </div>
+      </div>
+    </footer>
+    <script src="script.js"></script>
+    <script type="module" src="auth.js"></script>
+  </body>
+</html>
