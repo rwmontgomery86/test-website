@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Profile | NovaSight</title>
+    <title>Job Details | NovaSight</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -26,61 +26,49 @@
         </nav>
         <div class="nav-actions">
           <button class="theme-toggle" type="button" aria-label="Switch to dark mode">Dark Mode</button>
-          <a class="btn btn-sm active-btn" href="profile.html">Profile</a>
+          <a class="btn btn-sm active-btn" href="jobs.html">Jobs</a>
         </div>
       </div>
     </header>
 
     <main class="container page">
       <section class="page-hero">
-        <span class="pill">Member Profile</span>
-        <h1 id="welcome-title">Welcome Member!</h1>
-        <p>Update your profile details for your member account.</p>
+        <span class="pill">Job Details</span>
+        <h1 id="job-title">Loading job...</h1>
+        <p id="job-meta">Please wait while we load this opening.</p>
       </section>
 
       <nav class="member-nav" aria-label="Member navigation">
-        <a class="active" href="profile.html">Profile</a>
-        <a href="jobs.html">Jobs</a>
+        <a href="profile.html">Profile</a>
+        <a class="active" href="jobs.html">Jobs</a>
         <a href="notifications.html">Notifications</a>
       </nav>
 
-      <section class="profile-card">
-        <div class="profile-shell">
-          <aside class="profile-avatar-panel">
-            <img id="profile-photo-preview" class="profile-avatar" src="" alt="Profile photo preview" />
-            <label class="profile-file-label">
-              Profile Picture
-              <input id="profile-photo" type="file" accept="image/*" />
-            </label>
-            <p class="profile-help">Use a JPG, PNG, or WEBP image under 1.5 MB.</p>
-          </aside>
-
-          <form id="profile-form" class="profile-form" novalidate>
-            <label>
-              Full Name
-              <input id="profile-name" type="text" name="name" autocomplete="name" required />
-            </label>
-            <label>
-              Email
-              <input id="profile-email" type="email" name="email" autocomplete="email" readonly />
-            </label>
-            <label>
-              Address
-              <textarea
-                id="profile-address"
-                name="address"
-                rows="4"
-                placeholder="Street, City, State, ZIP"
-              ></textarea>
-            </label>
-            <div class="profile-actions">
-              <button class="btn" type="submit">Save Profile</button>
-              <button id="sign-out" class="text-btn" type="button">Sign Out</button>
-            </div>
-          </form>
+      <section id="job-detail-container" class="profile-card">
+        <div class="job-head-row">
+          <span id="job-status-badge" class="job-badge">Open</span>
+          <a class="text-link" href="jobs.html">Back to jobs</a>
         </div>
-        <div id="profile-status" class="status info" role="status" aria-live="polite">Checking account status...</div>
+        <p id="job-description" class="job-description"></p>
+
+        <div id="apply-panel" class="job-actions" hidden>
+          <button id="apply-button" class="btn" type="button">Apply</button>
+        </div>
       </section>
+
+      <section id="poster-panel" class="profile-card" hidden>
+        <h2>Applications</h2>
+        <p>Review applicants and accept or deny.</p>
+        <div id="applications-list" class="stack-list"></div>
+      </section>
+
+      <section id="job-not-found" class="profile-card" hidden>
+        <h2>Job Not Found</h2>
+        <p>This job posting does not exist or is no longer available.</p>
+        <a class="btn btn-sm" href="jobs.html">Go to Jobs</a>
+      </section>
+
+      <div id="job-detail-status" class="status info" role="status" aria-live="polite">Checking your member access...</div>
     </main>
 
     <footer class="site-footer">

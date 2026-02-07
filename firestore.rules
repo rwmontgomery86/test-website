@@ -1,0 +1,147 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function getJob(jobId) {
+      return get(/databases/$(database)/documents/jobs/$(jobId)).data;
+    }
+
+    function isJobPoster(jobId) {
+      return isVerified() && getJob(jobId).posterUid == request.auth.uid;
+    }
+
+    match /jobs/{jobId} {
+      allow read: if isVerified();
+
+      allow create: if isVerified()
+        && request.resource.data.posterUid == request.auth.uid
+        && request.resource.data.posterEmail == request.auth.token.email
+        && request.resource.data.status == "open"
+        && request.resource.data.acceptedApplicantUid == null
+        && request.resource.data.closedAt == null
+        && request.resource.data.title is string
+        && request.resource.data.company is string
+        && request.resource.data.location is string
+        && request.resource.data.salaryRange is string
+        && request.resource.data.description is string
+        && request.resource.data.employmentType in ["full_time", "part_time", "contract", "internship"];
+
+      allow update: if isJobPoster(jobId)
+        && request.resource.data.posterUid == resource.data.posterUid
+        && request.resource.data.posterEmail == resource.data.posterEmail
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.title == resource.data.title
+        && request.resource.data.company == resource.data.company
+        && request.resource.data.location == resource.data.location
+        && request.resource.data.salaryRange == resource.data.salaryRange
+        && request.resource.data.description == resource.data.description
+        && request.resource.data.employmentType == resource.data.employmentType
+        && (
+          (
+            resource.data.status == "open"
+            && request.resource.data.status == "closed"
+            && request.resource.data.acceptedApplicantUid == resource.data.acceptedApplicantUid
+            && request.resource.data.closedAt != null
+          )
+          || (
+            resource.data.status == "open"
+            && request.resource.data.status == "filled"
+            && request.resource.data.acceptedApplicantUid is string
+            && request.resource.data.closedAt != null
+          )
+          || (
+            resource.data.status == "filled"
+            && request.resource.data.status == "filled"
+            && request.resource.data.acceptedApplicantUid == resource.data.acceptedApplicantUid
+          )
+          || (
+            resource.data.status == "closed"
+            && request.resource.data.status == "closed"
+            && request.resource.data.acceptedApplicantUid == resource.data.acceptedApplicantUid
+          )
+        );
+
+      allow delete: if false;
+    }
+
+    match /jobs/{jobId}/applications/{applicantUid} {
+      allow read: if isVerified()
+        && (applicantUid == request.auth.uid || getJob(jobId).posterUid == request.auth.uid);
+
+      allow create: if isVerified()
+        && applicantUid == request.auth.uid
+        && getJob(jobId).status == "open"
+        && getJob(jobId).posterUid != request.auth.uid
+        && request.resource.data.jobId == jobId
+        && request.resource.data.applicantUid == request.auth.uid
+        && request.resource.data.status == "pending"
+        && request.resource.data.decidedAt == null
+        && request.resource.data.decidedByUid == null
+        && request.resource.data.applicantName is string
+        && request.resource.data.applicantEmail == request.auth.token.email;
+
+      allow update: if isVerified()
+        && getJob(jobId).posterUid == request.auth.uid
+        && resource.data.status == "pending"
+        && request.resource.data.jobId == resource.data.jobId
+        && request.resource.data.applicantUid == resource.data.applicantUid
+        && request.resource.data.applicantName == resource.data.applicantName
+        && request.resource.data.applicantEmail == resource.data.applicantEmail
+        && request.resource.data.status in ["accepted", "denied"]
+        && request.resource.data.decidedByUid == request.auth.uid
+        && request.resource.data.decidedAt != null;
+
+      allow delete: if false;
+    }
+
+    match /notifications/{notificationId} {
+      allow read: if isVerified() && resource.data.recipientUid == request.auth.uid;
+
+      allow create: if isVerified()
+        && request.resource.data.actorUid == request.auth.uid
+        && request.resource.data.type in ["application_received", "application_accepted", "application_denied"]
+        && request.resource.data.isRead == false
+        && request.resource.data.recipientUid is string
+        && request.resource.data.recipientEmail is string
+        && request.resource.data.jobId is string
+        && request.resource.data.jobTitle is string
+        && request.resource.data.applicationApplicantUid is string;
+
+      allow update: if isVerified()
+        && resource.data.recipientUid == request.auth.uid
+        && request.resource.data.recipientUid == resource.data.recipientUid
+        && request.resource.data.actorUid == resource.data.actorUid
+        && request.resource.data.recipientEmail == resource.data.recipientEmail
+        && request.resource.data.actorName == resource.data.actorName
+        && request.resource.data.type == resource.data.type
+        && request.resource.data.jobId == resource.data.jobId
+        && request.resource.data.jobTitle == resource.data.jobTitle
+        && request.resource.data.applicationApplicantUid == resource.data.applicationApplicantUid
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.isRead is bool;
+
+      allow delete: if false;
+    }
+
+    match /mail/{mailId} {
+      allow create: if isVerified()
+        && request.resource.data.meta.actorUid == request.auth.uid
+        && request.resource.data.to is list
+        && request.resource.data.to.size() == 1
+        && request.resource.data.message.subject is string
+        && request.resource.data.message.text is string
+        && request.resource.data.meta.type is string
+        && request.resource.data.meta.jobId is string
+        && request.resource.data.meta.recipientUid is string;
+
+      allow read, update, delete: if false;
+    }
+  }
+}

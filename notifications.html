@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Profile | NovaSight</title>
+    <title>Notifications | NovaSight</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -26,61 +26,33 @@
         </nav>
         <div class="nav-actions">
           <button class="theme-toggle" type="button" aria-label="Switch to dark mode">Dark Mode</button>
-          <a class="btn btn-sm active-btn" href="profile.html">Profile</a>
+          <a class="btn btn-sm active-btn" href="notifications.html">Notifications</a>
         </div>
       </div>
     </header>
 
     <main class="container page">
       <section class="page-hero">
-        <span class="pill">Member Profile</span>
-        <h1 id="welcome-title">Welcome Member!</h1>
-        <p>Update your profile details for your member account.</p>
+        <span class="pill">Member Notifications</span>
+        <h1>Track applications and hiring decisions.</h1>
+        <p>Read updates when someone applies to your jobs or when your applications are reviewed.</p>
       </section>
 
       <nav class="member-nav" aria-label="Member navigation">
-        <a class="active" href="profile.html">Profile</a>
+        <a href="profile.html">Profile</a>
         <a href="jobs.html">Jobs</a>
-        <a href="notifications.html">Notifications</a>
+        <a class="active" href="notifications.html">Notifications</a>
       </nav>
 
       <section class="profile-card">
-        <div class="profile-shell">
-          <aside class="profile-avatar-panel">
-            <img id="profile-photo-preview" class="profile-avatar" src="" alt="Profile photo preview" />
-            <label class="profile-file-label">
-              Profile Picture
-              <input id="profile-photo" type="file" accept="image/*" />
-            </label>
-            <p class="profile-help">Use a JPG, PNG, or WEBP image under 1.5 MB.</p>
-          </aside>
-
-          <form id="profile-form" class="profile-form" novalidate>
-            <label>
-              Full Name
-              <input id="profile-name" type="text" name="name" autocomplete="name" required />
-            </label>
-            <label>
-              Email
-              <input id="profile-email" type="email" name="email" autocomplete="email" readonly />
-            </label>
-            <label>
-              Address
-              <textarea
-                id="profile-address"
-                name="address"
-                rows="4"
-                placeholder="Street, City, State, ZIP"
-              ></textarea>
-            </label>
-            <div class="profile-actions">
-              <button class="btn" type="submit">Save Profile</button>
-              <button id="sign-out" class="text-btn" type="button">Sign Out</button>
-            </div>
-          </form>
+        <div class="section-head">
+          <h2>Recent Notifications</h2>
+          <button id="mark-all-read" class="text-btn" type="button">Mark all read</button>
         </div>
-        <div id="profile-status" class="status info" role="status" aria-live="polite">Checking account status...</div>
+        <div id="notifications-list" class="stack-list"></div>
       </section>
+
+      <div id="notifications-status" class="status info" role="status" aria-live="polite">Checking your member access...</div>
     </main>
 
     <footer class="site-footer">

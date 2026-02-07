@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jobs | NovaSight</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="site-bg"></div>
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a class="brand" href="index.html">NovaSight</a>
+        <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav">Menu</button>
+        <nav id="main-nav" class="main-nav">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="products.html">Products</a>
+          <a href="contact.html">Contact Us</a>
+        </nav>
+        <div class="nav-actions">
+          <button class="theme-toggle" type="button" aria-label="Switch to dark mode">Dark Mode</button>
+          <a class="btn btn-sm active-btn" href="jobs.html">Jobs</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="container page">
+      <section class="page-hero">
+        <span class="pill">Member Jobs</span>
+        <h1>Create openings and connect with other members.</h1>
+        <p>Post a job, review applicants, and manage decisions in one place.</p>
+      </section>
+
+      <nav class="member-nav" aria-label="Member navigation">
+        <a href="profile.html">Profile</a>
+        <a class="active" href="jobs.html">Jobs</a>
+        <a href="notifications.html">Notifications</a>
+      </nav>
+
+      <section class="jobs-grid">
+        <article class="profile-card">
+          <h2>Create Job Opening</h2>
+          <form id="job-create-form" class="profile-form" novalidate>
+            <label>
+              Job Title
+              <input type="text" name="title" required />
+            </label>
+            <label>
+              Company
+              <input type="text" name="company" required />
+            </label>
+            <label>
+              Location
+              <input type="text" name="location" placeholder="Remote, New York, NY" required />
+            </label>
+            <label>
+              Employment Type
+              <select name="employmentType" required>
+                <option value="">Choose one</option>
+                <option value="full_time">Full-time</option>
+                <option value="part_time">Part-time</option>
+                <option value="contract">Contract</option>
+                <option value="internship">Internship</option>
+              </select>
+            </label>
+            <label>
+              Salary Range
+              <input type="text" name="salaryRange" placeholder="$80k-$100k" required />
+            </label>
+            <label>
+              Description
+              <textarea name="description" rows="5" required></textarea>
+            </label>
+            <button class="btn" type="submit">Publish Job</button>
+          </form>
+        </article>
+
+        <article class="profile-card">
+          <div class="section-head">
+            <h2>Open Jobs</h2>
+            <label class="inline-check">
+              <input id="show-closed-toggle" type="checkbox" />
+              Show closed/filled
+            </label>
+          </div>
+          <div id="open-jobs-list" class="stack-list"></div>
+        </article>
+      </section>
+
+      <section class="profile-card">
+        <h2>My Posted Jobs</h2>
+        <div id="my-jobs-list" class="stack-list"></div>
+      </section>
+
+      <div id="jobs-status" class="status info" role="status" aria-live="polite">Checking your member access...</div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-wrap">
+        <p>© 2026 NovaSight. Placeholder SaaS concept.</p>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="products.html">Products</a>
+          <a href="contact.html">Contact</a>
+        </div>
+      </div>
+    </footer>
+    <script src="script.js"></script>
+    <script type="module" src="auth.js"></script>
+  </body>
+</html>
