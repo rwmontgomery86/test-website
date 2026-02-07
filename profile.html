@@ -32,12 +32,46 @@
     </header>
 
     <main class="container page">
-      <section class="profile-card">
-        <h2>Member Profile</h2>
+      <section class="page-hero">
+        <span class="pill">Member Profile</span>
         <h1 id="welcome-title">Welcome Member!</h1>
-        <p>This is your static profile page for testing member experiences.</p>
-        <div class="profile-actions">
-          <button id="sign-out" class="text-btn" type="button">Sign Out</button>
+        <p>Update your profile details for your member account.</p>
+      </section>
+
+      <section class="profile-card">
+        <div class="profile-shell">
+          <aside class="profile-avatar-panel">
+            <img id="profile-photo-preview" class="profile-avatar" src="" alt="Profile photo preview" />
+            <label class="profile-file-label">
+              Profile Picture
+              <input id="profile-photo" type="file" accept="image/*" />
+            </label>
+            <p class="profile-help">Use a JPG, PNG, or WEBP image under 1.5 MB.</p>
+          </aside>
+
+          <form id="profile-form" class="profile-form" novalidate>
+            <label>
+              Full Name
+              <input id="profile-name" type="text" name="name" autocomplete="name" required />
+            </label>
+            <label>
+              Email
+              <input id="profile-email" type="email" name="email" autocomplete="email" readonly />
+            </label>
+            <label>
+              Address
+              <textarea
+                id="profile-address"
+                name="address"
+                rows="4"
+                placeholder="Street, City, State, ZIP"
+              ></textarea>
+            </label>
+            <div class="profile-actions">
+              <button class="btn" type="submit">Save Profile</button>
+              <button id="sign-out" class="text-btn" type="button">Sign Out</button>
+            </div>
+          </form>
         </div>
         <div id="profile-status" class="status info" role="status" aria-live="polite">Checking account status...</div>
       </section>

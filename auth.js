@@ -27,7 +27,14 @@ const resendVerificationButton = document.querySelector("#resend-verification");
 const checkVerificationButton = document.querySelector("#check-verification");
 const welcomeTitle = document.querySelector("#welcome-title");
 const profileStatus = document.querySelector("#profile-status");
+const profileForm = document.querySelector("#profile-form");
+const profilePhotoInput = document.querySelector("#profile-photo");
+const profilePhotoPreview = document.querySelector("#profile-photo-preview");
+const profileNameInput = document.querySelector("#profile-name");
+const profileEmailInput = document.querySelector("#profile-email");
+const profileAddressInput = document.querySelector("#profile-address");
 const signOutButton = document.querySelector("#sign-out");
+const MAX_PROFILE_PHOTO_BYTES = 1572864;
 
 const configIsReady = Object.values(firebaseConfig).every(
   (value) => typeof value === "string" && value.length > 0 && !value.startsWith("REPLACE_WITH_")
@@ -106,13 +113,71 @@ function getFirstName(user) {
   return "Member";
 }
 
+function getProfileStorageKey(userId) {
+  return `novasight-profile-${userId}`;
+}
+
+function readStoredProfile(userId) {
+  try {
+    const raw = localStorage.getItem(getProfileStorageKey(userId));
+
+    if (!raw) {
+      return {};
+    }
+
+    const parsed = JSON.parse(raw);
+
+    if (!parsed || typeof parsed !== "object") {
+      return {};
+    }
+
+    return parsed;
+  } catch (error) {
+    return {};
+  }
+}
+
+function writeStoredProfile(userId, profileData) {
+  localStorage.setItem(getProfileStorageKey(userId), JSON.stringify(profileData));
+}
+
+function buildAvatarDataUrl(label) {
+  const initial = String(label || "M").trim().charAt(0).toUpperCase() || "M";
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0e6dff"/><stop offset="100%" stop-color="#14b3ff"/></linearGradient></defs><rect width="320" height="320" fill="url(#g)"/><text x="50%" y="54%" text-anchor="middle" font-size="140" font-family="Manrope, Arial, sans-serif" fill="white">${initial}</text></svg>`;
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+function setProfilePhoto(photoUrl, fallbackLabel) {
+  if (!profilePhotoPreview) {
+    return;
+  }
+
+  profilePhotoPreview.src = photoUrl || buildAvatarDataUrl(fallbackLabel);
+}
+
+function fileToDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      resolve(String(reader.result || ""));
+    };
+
+    reader.onerror = () => {
+      reject(new Error("Could not read file."));
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+
 function disableAuthInputs() {
-  [loginForm, signupForm].forEach((form) => {
+  [loginForm, signupForm, profileForm].forEach((form) => {
     if (!form) {
       return;
     }
 
-    form.querySelectorAll("input, button").forEach((element) => {
+    form.querySelectorAll("input, textarea, button").forEach((element) => {
       element.disabled = true;
     });
   });
@@ -274,6 +339,85 @@ async function runAuthPage(auth) {
 }
 
 function runProfilePage(auth) {
+  let currentUser = null;
+  let currentPhotoDataUrl = "";
+  setProfilePhoto("", "Member");
+
+  if (profilePhotoInput) {
+    profilePhotoInput.addEventListener("change", async () => {
+      const file = profilePhotoInput.files && profilePhotoInput.files[0];
+
+      if (!file) {
+        return;
+      }
+
+      if (!file.type.startsWith("image/")) {
+        setStatus(profileStatus, "error", "Please upload a valid image file.");
+        profilePhotoInput.value = "";
+        return;
+      }
+
+      if (file.size > MAX_PROFILE_PHOTO_BYTES) {
+        setStatus(profileStatus, "error", "Profile photo is too large. Please use an image under 1.5 MB.");
+        profilePhotoInput.value = "";
+        return;
+      }
+
+      try {
+        currentPhotoDataUrl = await fileToDataUrl(file);
+        const fallbackLabel = (profileNameInput && profileNameInput.value.trim()) || "Member";
+        setProfilePhoto(currentPhotoDataUrl, fallbackLabel);
+        setStatus(profileStatus, "info", "Photo selected. Click Save Profile to keep your changes.");
+      } catch (error) {
+        setStatus(profileStatus, "error", "We could not process that image. Please try another file.");
+      }
+    });
+  }
+
+  if (profileForm) {
+    profileForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      if (!currentUser) {
+        setStatus(profileStatus, "error", "You need to be logged in to save profile changes.");
+        return;
+      }
+
+      const name = String((profileNameInput && profileNameInput.value) || "").trim();
+      const address = String((profileAddressInput && profileAddressInput.value) || "").trim();
+
+      if (!name) {
+        setStatus(profileStatus, "error", "Please enter your full name.");
+        return;
+      }
+
+      try {
+        await updateProfile(currentUser, { displayName: name });
+
+        const profileData = {
+          name,
+          address,
+          photoDataUrl: currentPhotoDataUrl,
+          updatedAt: Date.now(),
+        };
+
+        writeStoredProfile(currentUser.uid, profileData);
+        setProfilePhoto(currentPhotoDataUrl, name);
+
+        if (welcomeTitle) {
+          welcomeTitle.textContent = `Welcome ${getFirstName({ displayName: name, email: currentUser.email })}!`;
+        }
+
+        setStatus(profileStatus, "success", "Profile saved successfully.");
+      } catch (error) {
+        const message = error && error.name === "QuotaExceededError"
+          ? "Could not save profile photo. Try a smaller image."
+          : "Could not save your profile right now. Please try again.";
+        setStatus(profileStatus, "error", message);
+      }
+    });
+  }
+
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
       window.location.href = loginUrl("login");
@@ -287,12 +431,36 @@ function runProfilePage(auth) {
       return;
     }
 
-    const firstName = getFirstName(user);
+    currentUser = user;
+
+    const storedProfile = readStoredProfile(user.uid);
+    const name = String(storedProfile.name || user.displayName || "").trim();
+    const address = String(storedProfile.address || "").trim();
+    const email = String(user.email || "").trim();
+    const storedPhoto = typeof storedProfile.photoDataUrl === "string" ? storedProfile.photoDataUrl : "";
+    const userPhoto = typeof user.photoURL === "string" ? user.photoURL : "";
+    currentPhotoDataUrl = storedPhoto || userPhoto;
+
+    if (profileNameInput) {
+      profileNameInput.value = name;
+    }
+
+    if (profileEmailInput) {
+      profileEmailInput.value = email;
+    }
+
+    if (profileAddressInput) {
+      profileAddressInput.value = address;
+    }
+
+    setProfilePhoto(currentPhotoDataUrl, name || email || "Member");
+
+    const firstName = getFirstName({ displayName: name || user.displayName || "", email });
     if (welcomeTitle) {
       welcomeTitle.textContent = `Welcome ${firstName}!`;
     }
 
-    setStatus(profileStatus, "success", "Email verified. Profile access granted.");
+    setStatus(profileStatus, "success", "Email verified. Update your profile details below.");
   });
 
   if (signOutButton) {
